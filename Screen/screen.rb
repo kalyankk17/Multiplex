@@ -4,10 +4,11 @@ class Screen
 
 	attr_accessor :number, :description
 
-	def initialize(number, description,screen_builder: ScreenBuilder )
+	def initialize(number, description,screen_builder: ScreenBuilder, ticket_booking: TicketBooking )
 		@number = number
 		@description = description
 		@screen_builder = screen_builder.new
+		@ticket_booking = ticket_booking.new
 	end
 
 
@@ -27,5 +28,10 @@ class Screen
         puts "Select seats "
         selected_seats = gets.chomp
         puts "selected_seats #{selected_seats}" 
+        initialize_ticket_booking
+	end 
+
+	def initialize_ticket_booking
+        ticket_booking(selected_seats,@screen_builder).book_ticket
 	end 
 end 
