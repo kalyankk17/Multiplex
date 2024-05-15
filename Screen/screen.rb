@@ -1,4 +1,5 @@
 require_relative 'screen_builder'
+require "./Ticket/ticket_booking"
 
 class Screen
 
@@ -8,7 +9,7 @@ class Screen
 		@number = number
 		@description = description
 		@screen_builder = screen_builder.new
-		@ticket_booking = ticket_booking.new
+		@ticket_booking = ticket_booking
 	end
 
 
@@ -28,10 +29,10 @@ class Screen
         puts "Select seats "
         selected_seats = gets.chomp
         puts "selected_seats #{selected_seats}" 
-        initialize_ticket_booking
+        initialize_ticket_booking(selected_seats)
 	end 
 
-	def initialize_ticket_booking
-        ticket_booking(selected_seats,@screen_builder).book_ticket
+	def initialize_ticket_booking(selected_seats)
+        @ticket_booking.new(selected_seats,@screen_builder.seats).book_ticket
 	end 
 end 

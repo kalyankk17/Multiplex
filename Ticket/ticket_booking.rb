@@ -1,7 +1,7 @@
 require_relative 'generate_ticket_invoice' # Add missing import statement
 
 class TicketBooking
-	def initialize(selected_seats, screen_deails, generate_ticket_invoice: GenerateTicketInvoice.new)
+	def initialize(selected_seats, screen_deails, generate_ticket_invoice: GenerateTicketInvoice)
 		@selected_seats = selected_seats
 		@screen_deails = screen_deails
 		@generate_ticket_invoice = generate_ticket_invoice 
@@ -9,7 +9,7 @@ class TicketBooking
 
 	def book_ticket
 		update_seat_availability
-		generate_ticket_invoice.print
+		@generate_ticket_invoice.new(@screen_deails).print
 	end
 
 	def update_seat_availability
@@ -23,15 +23,20 @@ class TicketBooking
 	def update_latest_seat_availability(seat_type, seat_number)
 		case seat_type
 		when :d
-			@screen_deails.seats[:available][:diamond_seats].delete(seat_number)
-			@screen_deails.seats[:booked][:diamond_seats].push(seat_number)
+			seat = @screen_deails[:available][:diamond_seats].find { | seat| seat.number == seat_number  }
+
+			@screen_deails[:available][:diamond_seats].delete(seat)
+			@screen_deails[:booked][:diamond_seats] << seat
 		when :n
-			@screen_deails.seats[:available][:normal_seats].delete(seat_number)
-			@screen_deails.seats[:booked][:normal_seats].push(seat_number)
+			seat = @screen_deails[:available][:diamond_seats].find { | seat| seat.number == seat_number  }
+
+			@screen_deails[:available][:normal_seats].delete(seat)
+			@screen_deails[:booked][:normal_seats] << seat
 		when :g
-			@screen_deails.seats[:available][:gold_seats].delete(seat_number)
-			@screen_deails.seats[:booked][:gold_seats].push(seat_number)
-		else
+			seat = @screen_deails[:available][:diamond_seats].find { | seat| seat.number == seat_number  }
+
+			@screen_deails[:available][:gold_seats].delete(seat)
+			@screen_deails[:booked][:gold_seats] << seat
 			puts "Invalid seat selection"
 		end
 	end
